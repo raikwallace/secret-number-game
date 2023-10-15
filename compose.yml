@@ -1,0 +1,3 @@
+services:
+  secret-number-game:
+    build: .
