@@ -1,6 +1,8 @@
+import Output from "../../services/Output";
+
 const figlet = require("figlet");
 
-class ConsoleOutput implements Output{
+export default class ConsoleOutput implements Output{
     constructor() {}
 
     public showMessage(message: string): void {

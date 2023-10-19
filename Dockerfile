@@ -7,4 +7,5 @@ RUN npm install
 
 COPY . .
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+EXPOSE 3000
+CMD ["node", "./dist/entrypoint/app.js"]

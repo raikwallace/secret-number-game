@@ -1,8 +1,8 @@
-interface Card {
+export  interface Card {
     applyEffect(firstNumber: number, secondNumber: number): number;
 }
 
-class SumCard implements Card {
+export class SumCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -10,7 +10,7 @@ class SumCard implements Card {
     }
 }
 
-class DivideCard implements Card {
+export class DivideCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -18,7 +18,7 @@ class DivideCard implements Card {
     }
 }
 
-class MultiplyCard implements Card {
+export class MultiplyCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -26,7 +26,7 @@ class MultiplyCard implements Card {
     }
 }
 
-class NumOfZerosCard implements Card {
+export class NumOfZerosCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {

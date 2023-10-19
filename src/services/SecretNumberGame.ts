@@ -1,18 +1,25 @@
-class SecretNumberGame {
+import { Card, DivideCard, MultiplyCard, NumOfZerosCard, SumCard } from "../model/Card";
+import Player from "../model/Player";
+import Input from "./Input";
+import Output from "./Output";
+
+export class SecretNumberGame {
     public playersByName: { [key: string]: Player };
     private output: Output;
+    private input: Input;
     private usedNumbers: number[];
     private numberOfPlayers: number;
 
-    constructor(output: Output, numberOfPlayers: number) {
+    constructor(output: Output, input: Input, numberOfPlayers: number) {
         this.output = output;
+        this.input = input;
         this.playersByName = {};
         this.usedNumbers = [];
         this.numberOfPlayers = numberOfPlayers;
     }
 
     public canPlayersPlay(): boolean {
-        return Object.values(this.playersByName).some(player => player.cardsAbailable.length > 0 );   
+        return Object.values(this.playersByName).some(player => player.cardsAvailable.length > 0 );   
     }
 
     public endGame(): void {
@@ -54,22 +61,62 @@ class SecretNumberGame {
         return scores ;
     }
 
+    public async registerPlayers(playersNumber: number): Promise<void> {
+        for (let i = 0; i < playersNumber; i++) {
+            const playerName = await this.input.getInput(`Player ${i+1} name? `);
+            this.setPlayer(playerName);
+        }
+    }
+
+    public async setPlayerForecast(player: Player): Promise<void> {
+        this.output.showImportantMessage(`${player.name} your forecast:`);
+        for (const otherPlayer of Object.values(this.playersByName)) {
+            const forecast = await this.input.getInput(`${otherPlayer.name} forecast: `);
+            if (forecast === "" || Number(forecast) < 1 || Number(forecast) >= 100) {
+                player.forecast[otherPlayer.name] = undefined;
+            } else {
+                player.forecast[otherPlayer.name] = Number(forecast);
+            }
+        }
+    }
+
+    public showScores(): void {
+        for (const score of Object.entries(this.getScores())) {
+            this.output.showImportantMessage(`${score[0]} score: ${score[1]}`)
+        }
+        for (const player of Object.values(this.playersByName)) {
+            this.output.showImportantMessage(`${player.name} number: ${player.number}`)
+        }
+    }
+
     public startGame(): void {
         if (Object.keys(this.playersByName).length < this.numberOfPlayers) {
             this.output.showMessage("Not enough players.");
             return;
         }
         Object.values(this.playersByName).forEach(player => {
-            player.cardsAbailable = [new SumCard(), new MultiplyCard(), new DivideCard(), new NumOfZerosCard()]
+            player.cardsAvailable = [new SumCard(), new MultiplyCard(), new DivideCard(), new NumOfZerosCard()]
         });
         this.output.showImportantMessage("Game started.");
     }
 
-    public setPlayer(playerName: string): void {
-        const number = this.generateNumber();
-        const player = new Player(playerName, number, 0, []);
-        this.playersByName[playerName] = player;
-        this.usedNumbers.push(number);
+    public useCard(playerOne: Player, playerTwo: Player, card: Card): void {
+        switch (card.constructor) {
+            case SumCard:
+                this.output.showImportantMessage(`${playerOne.name} plus ${playerTwo.name} : ${playerOne.number + playerTwo.number}`);
+                break;
+            case MultiplyCard:
+                this.output.showImportantMessage(`${playerOne.name} * ${playerTwo.name} : ${playerOne.number * playerTwo.number}`);
+                break;
+            case DivideCard:
+                this.output.showImportantMessage(`${playerOne.name} / ${playerTwo.name} : ${Math.round(Math.max(playerOne.number, playerTwo.number) / Math.min(playerTwo.number, playerOne.number))}`);
+                break;
+            case NumOfZerosCard:
+                this.output.showImportantMessage(`Zeros ${playerOne.name} to ${playerTwo.name} = ${Math.round((Math.max(playerOne.number, playerTwo.number) - Math.min(playerTwo.number + 1, playerOne.number + 1))/10)}`);
+                break;
+        }
+        playerOne.cardsAvailable = playerOne.cardsAvailable.filter(value => value !== card);
+        playerTwo.cardsAvailable = playerTwo.cardsAvailable.filter(value => value !== card);
     }
 
     private generateNumber(): number {
@@ -78,5 +125,12 @@ class SecretNumberGame {
             number = Math.floor(Math.random() * 100) + 1;
         }
         return number;
+    }
+
+    private setPlayer(playerName: string): void {
+        const number = this.generateNumber();
+        const player = new Player(playerName, number, 0, []);
+        this.playersByName[playerName] = player;
+        this.usedNumbers.push(number);
     }
 }
