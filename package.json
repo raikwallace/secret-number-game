@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node  --experimental-modules  dist/index.js",
+    "start-cli": "node  --experimental-modules  dist/entrypoint/cli.js",
+    "start-server": "node  dist/entrypoint/app.js",
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,7 +17,8 @@
     "commander": "^11.0.0",
     "express": "^4.18.2",
     "figlet": "^1.6.0",
-    "inquirer": "^9.2.11"
+    "inquirer": "^9.2.11",
+    "pug": "^3.0.2"
   },
   "bin": {
     "scret-number-game": "./src/index.ts"
