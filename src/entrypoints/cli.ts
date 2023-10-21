@@ -44,7 +44,7 @@ async function start(output: ConsoleOutput, input: ConsoleInput) {
         }
         const playerOne = Object.values(game.playersByName)[Number(playerIndexOne)-1];
         const playerTwo = Object.values(game.playersByName)[Number(playerIndexTwo)-1];
-        const commonCardsAvailable = playerOne.cardsAvailable.filter(value => playerTwo.cardsAvailable.includes(value));
+        const commonCardsAvailable = playerOne.availableCards.filter(value => playerTwo.availableCards.includes(value));
         if (commonCardsAvailable.length === 0) {
             output.showMessage("No common cards.");
             continue;

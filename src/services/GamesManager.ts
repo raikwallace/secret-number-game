@@ -12,6 +12,10 @@ export default class GamesManager {
         return this.games[id];
     }
 
+    public getGames(): SecretNumberGame[] {
+        return this.games;
+    }
+
     public removeGame(id: number): void {
         this.games.splice(id, 1);
     }

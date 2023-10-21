@@ -1,0 +1,32 @@
+extends layout 
+
+block content 
+    p.text-center You are playing game #{gameId} as #{player.name}
+    div.text-center
+        form(class="form-signin" method="POST" action=`/selectPlayerTwo?gameId=${gameId}&playerName=${player.name}`)
+            if player.availableCards
+                each card in player.availableCards
+                    div.form-check
+                        input(type="radio" name="cardName" id=`${card.name}` class="form-check-input" value=`${card.name}` required)
+                        label( for=`${card.name}` class="form-check-label") #{card.name}
+                        
+                - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                button(class=buttonClass type="submit") Play Card
+            else
+                h1 No cards to play
+    br
+    if playersWaiting 
+        each player in playersWaiting 
+            form(class="form-signin" method="POST" action=`/acceptUseCard?gameId=${gameId}&playerName=${player}`)
+                div.form-check
+                    input(type="radio" name="playerTwoName" id=`${player}` class="form-check-input" value=`${player}` required)
+                    label( for=`${playere}` class="form-check-label") #{player}
+                        
+                - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                button(class=buttonClass type="submit") Acept Use Card 
+    br
+    form(class="form-signin" method="POST" action=`/play`)
+            input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)
+            input(type="hidden" name="playerName" id="playerName" class="form-control" value=`${player.name}` required)
+            - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+            button(class=buttonClass type="submit") Refresh

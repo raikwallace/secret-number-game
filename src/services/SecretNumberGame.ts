@@ -3,8 +3,14 @@ import Player from "../model/Player";
 import Input from "./Input";
 import Output from "./Output";
 
+export enum GameStatus {
+    STARTED = "STARTED",
+    WAITING_FOR_PLAYERS = "WAITING_FOR_PLAYERS",
+}
+
 export class SecretNumberGame {
     public playersByName: { [key: string]: Player };
+    private status: GameStatus = GameStatus.WAITING_FOR_PLAYERS;
     private output: Output;
     private input: Input;
     private usedNumbers: number[];
@@ -19,7 +25,7 @@ export class SecretNumberGame {
     }
 
     public canPlayersPlay(): boolean {
-        return Object.values(this.playersByName).some(player => player.cardsAvailable.length > 0 );   
+        return Object.values(this.playersByName).some(player => player.availableCards.length > 0 );   
     }
 
     public endGame(): void {
@@ -61,11 +67,30 @@ export class SecretNumberGame {
         return scores ;
     }
 
+    public getNumberOfPlayers(): number {
+        return this.numberOfPlayers;
+    }
+
+    public getStatus(): GameStatus {
+        return this.status;
+    }
+
+    public isReady(): boolean {
+        return Object.keys(this.playersByName).length == this.numberOfPlayers;
+    }
+
     public async registerPlayers(playersNumber: number): Promise<void> {
         for (let i = 0; i < playersNumber; i++) {
             const playerName = await this.input.getInput(`Player ${i+1} name? `);
             this.setPlayer(playerName);
         }
+    }
+    
+    public setPlayer(playerName: string): void {
+        const number = this.generateNumber();
+        const player = new Player(playerName, number, 0, []);
+        this.playersByName[playerName] = player;
+        this.usedNumbers.push(number);
     }
 
     public async setPlayerForecast(player: Player): Promise<void> {
@@ -90,13 +115,14 @@ export class SecretNumberGame {
     }
 
     public startGame(): void {
-        if (Object.keys(this.playersByName).length < this.numberOfPlayers) {
+        if (!this.isReady()) {
             this.output.showMessage("Not enough players.");
             return;
         }
         Object.values(this.playersByName).forEach(player => {
-            player.cardsAvailable = [new SumCard(), new MultiplyCard(), new DivideCard(), new NumOfZerosCard()]
+            player.availableCards = [new SumCard(), new MultiplyCard(), new DivideCard(), new NumOfZerosCard()]
         });
+        this.status = GameStatus.STARTED;
         this.output.showImportantMessage("Game started.");
     }
 
@@ -115,8 +141,8 @@ export class SecretNumberGame {
                 this.output.showImportantMessage(`Zeros ${playerOne.name} to ${playerTwo.name} = ${Math.round((Math.max(playerOne.number, playerTwo.number) - Math.min(playerTwo.number + 1, playerOne.number + 1))/10)}`);
                 break;
         }
-        playerOne.cardsAvailable = playerOne.cardsAvailable.filter(value => value !== card);
-        playerTwo.cardsAvailable = playerTwo.cardsAvailable.filter(value => value !== card);
+        playerOne.availableCards = playerOne.availableCards.filter(value => value !== card);
+        playerTwo.availableCards = playerTwo.availableCards.filter(value => value !== card);
     }
 
     private generateNumber(): number {
@@ -125,12 +151,5 @@ export class SecretNumberGame {
             number = Math.floor(Math.random() * 100) + 1;
         }
         return number;
-    }
-
-    private setPlayer(playerName: string): void {
-        const number = this.generateNumber();
-        const player = new Player(playerName, number, 0, []);
-        this.playersByName[playerName] = player;
-        this.usedNumbers.push(number);
     }
 }

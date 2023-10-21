@@ -64,7 +64,7 @@ export default class GameController {
         const game = this.gamesManager.getGame(gameId)
         const playerOne = game.playersByName[req.body.playerOneName];
         const playerTwo = game.playersByName[req.body.playerTwoName];
-        const commonCardsAvailable = playerOne.cardsAvailable.filter(value => playerTwo.cardsAvailable.includes(value));
+        const commonCardsAvailable = playerOne.availableCards.filter(value => playerTwo.availableCards.includes(value));
         if (commonCardsAvailable.length === 0) {
             res.send("No common cards.");
             return;

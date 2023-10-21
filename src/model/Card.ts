@@ -1,8 +1,10 @@
 export  interface Card {
+    name: string;
     applyEffect(firstNumber: number, secondNumber: number): number;
 }
 
 export class SumCard implements Card {
+    public name: string = "Sum";
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -11,6 +13,7 @@ export class SumCard implements Card {
 }
 
 export class DivideCard implements Card {
+    public name: string = "Divide";
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -19,6 +22,7 @@ export class DivideCard implements Card {
 }
 
 export class MultiplyCard implements Card {
+    public name: string = "Multiply";
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
@@ -27,6 +31,7 @@ export class MultiplyCard implements Card {
 }
 
 export class NumOfZerosCard implements Card {
+    public name: string = "Number Of Zeros";
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
