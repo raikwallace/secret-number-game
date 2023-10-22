@@ -29,6 +29,10 @@ router.post('/play', webController.play.bind(webController));
 router.post('/selectPlayerTwo', webController.selectPlayerTwo.bind(webController));
 router.post('/useCard', webController.useCard.bind(webController));
 router.post('/acceptUseCard', webController.acceptUseCard.bind(webController));
+router.get('/setPlayerForecast', webController.getSetPlayerForecastPage.bind(webController));
+router.post('/setPlayerForecast', webController.setPlayerForecast.bind(webController));
 router.get('/results', webController.endGame.bind(webController));
+router.get('/endGame', webController.getEndGamePage.bind(webController));
+router.get('/removeAllGames', webController.removeAllGames.bind(webController));
 
 export default router;

@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+    p.text-center You are playing game #{gameId} as #{playerName}
+    div.text-center
+        form(class="form-signin" method="POST" action=`/setPlayerForecast?gameId=${gameId}&playerName=${playerName}`)
+            p.text-center Set your forecast for each player
+                each otherPlayer in players
+                    div.form-check
+                        label( for=`${otherPlayer.name}` class="form-label") #{otherPlayer.name} number:
+                        if otherPlayer.name === playerName
+                            input(type="test" name=`${otherPlayer.name}` id=`${otherPlayer.name}` class="form-input" required)
+                        else 
+                            input(type="test" name=`${otherPlayer.name}` id=`${otherPlayer.name}` class="form-input")
+                - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+                button(class=buttonClass type="submit") Set Forecast

@@ -28,3 +28,6 @@ block content
             input(type="hidden" name="playerName" id="playerName" class="form-control" value=`${player.name}` required)
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
             button(class=buttonClass type="submit") Refresh
+    br
+    - var buttonClass=['btn', 'btn-lg', 'btn-secondary', 'btn-block'];
+    a(class=buttonClass href=`/setPlayerForecast?gameId=${gameId}&playerName=${player.name}`) Set your forecast for the game
