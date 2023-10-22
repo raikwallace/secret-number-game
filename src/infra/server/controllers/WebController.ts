@@ -108,6 +108,7 @@ export default class WebController {
             res.send("Wrong code.");
             return;
         }
+        this.gamesManager.removeAllGames();
         res.send("OK")
     }
 
