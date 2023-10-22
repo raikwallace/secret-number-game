@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+    if players && scores
+        h1.text-center Scores 
+        each player in players 
+            p.text-center #{player.name} has #{scores[player.name]} points and the secret number was #{player.number}
+
+        .text-center 
+            a.btn.btn-lg.btn-block.btn-secondary(href=`/?gameId=${gameId}`) Close game and play again
+    else 
+        p.text-center Waitings for other players to forecast, please press Refresh when ready...
+        .text-center 
+            a.btn.btn-lg.btn-block.btn-primary(href=`/endGame?gameId=${gameId}&playerName=${playerName}`) Refresh

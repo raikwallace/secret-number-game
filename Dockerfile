@@ -6,5 +6,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN npm run build
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+EXPOSE 3000
+CMD ["node", "./dist/entrypoints/server.js"]
