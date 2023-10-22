@@ -11,4 +11,7 @@ export default class ServerOutput implements Output {
     getOutput(): string {
         return this.outputs.shift() || "";
     }
+    clearOutput(): void {
+        this.outputs = [];
+    }
 }

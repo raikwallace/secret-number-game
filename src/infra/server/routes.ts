@@ -28,5 +28,7 @@ router.post('/registerPlayer', webController.registerPlayer.bind(webController))
 router.post('/play', webController.play.bind(webController));
 router.post('/selectPlayerTwo', webController.selectPlayerTwo.bind(webController));
 router.post('/useCard', webController.useCard.bind(webController));
+router.post('/acceptUseCard', webController.acceptUseCard.bind(webController));
+router.get('/results', webController.endGame.bind(webController));
 
 export default router;

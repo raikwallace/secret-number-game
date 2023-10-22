@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+    h1.text-center Scores 
+    each player in players 
+        p.text-center #{player.name} has #{player.score} points
+    div.text-center
+        h2.text-center The secret numbers were:
+        ul
+        each player in players 
+            li #{player.name} had #{player.number}
+
+    .text-center 
+        a.btn.btn-primary(href='/') Play Again

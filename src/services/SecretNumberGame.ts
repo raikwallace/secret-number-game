@@ -141,8 +141,8 @@ export class SecretNumberGame {
                 this.output.showImportantMessage(`Zeros ${playerOne.name} to ${playerTwo.name} = ${Math.round((Math.max(playerOne.number, playerTwo.number) - Math.min(playerTwo.number + 1, playerOne.number + 1))/10)}`);
                 break;
         }
-        playerOne.availableCards = playerOne.availableCards.filter(value => value !== card);
-        playerTwo.availableCards = playerTwo.availableCards.filter(value => value !== card);
+        playerOne.availableCards = playerOne.availableCards.filter(value => value.name !== card.name);
+        playerTwo.availableCards = playerTwo.availableCards.filter(value => value.name !== card.name);
     }
 
     private generateNumber(): number {

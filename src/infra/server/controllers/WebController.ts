@@ -7,7 +7,7 @@ export default class WebController {
     private gamesManager: GamesManager;
     private input: ServerInput;
     private output: ServerOutput;
-    private playersWaitingToUseCard: [string, boolean, string, boolean, string][] = [];
+    private playersWaitingToUseCard: [string, boolean, string, boolean, string, string | undefined][] = [];
 
     constructor(gamesManager: GamesManager, input: ServerInput, output: ServerOutput) {
         this.input = input;
@@ -19,18 +19,22 @@ export default class WebController {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
+            return;
         }
         const playerName = req.query.playerName as string;
         if (playerName === undefined) {
             res.send("No player name.");
+            return;
         }
         const cardName = req.query.cardName as string;
         if (cardName === undefined) {
             res.send("No card name.");
+            return;
         }
         const playerTwoName = req.body.playerTwoName as string;
         if (cardName === undefined) {
             res.send("No card name.");
+            return;
         }
         const game = this.gamesManager.getGame(gameId)
         const player = game.playersByName[playerName];
@@ -40,8 +44,20 @@ export default class WebController {
             res.send("No card found.");
             return;
         }
+        this.output.clearOutput();
         game.useCard(player, playerTwo, card);
-        res.render('result', { gameId: gameId, playerName: req.body.playerName, resultText: this.output.getOutput() });
+        const result = this.output.getOutput();
+        const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCard.find(playersAndCard => {
+            return (playersAndCard[0] === playerName && playersAndCard[2] === playerTwoName && playersAndCard[4] === cardName) || (playersAndCard[0] === playerTwoName && playersAndCard[2] === playerName && playersAndCard[4] === cardName);
+        })
+        if (playerOneAndTwoWaitingToUseCard === undefined) {
+            res.send("No players to set result.");
+            return;
+        }
+        playerOneAndTwoWaitingToUseCard[5] = result;
+        playerOneAndTwoWaitingToUseCard[1] = true;
+        playerOneAndTwoWaitingToUseCard[3] = true;
+        res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: cardName, resultText: result });
     }
 
     public async getPage(req: any, res: any) {
@@ -62,14 +78,17 @@ export default class WebController {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
+            return;
         }
         const playerName = req.query.playerName as string;
         if (playerName === undefined) {
             res.send("No player name.");
+            return;
         }
         const cardName = req.body.cardName as string;
         if (cardName === undefined) {
             res.send("No card name.");
+            return;
         }
         const game = this.gamesManager.getGame(gameId)
         const player = game.playersByName[playerName];
@@ -85,12 +104,15 @@ export default class WebController {
         res.render('selectPlayerTwo', { gameId: gameId, player: player, cardName: cardName, availablePlayers: availablePlayers });
     }
 
-    public async endGame(req: any, res: any) {}
+    public async endGame(req: any, res: any) {
+        res.render('endGame', {})
+    }
 
     public async registerPlayer(req: any, res: any) {
         const gameId = req.body.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
+            return;
         }
         this.gamesManager.getGame(gameId).setPlayer(req.body.playerName as string);
         res.render('play', { gameId: gameId, playerName: req.body.playerName });
@@ -100,6 +122,7 @@ export default class WebController {
         const gameId = req.body.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
+            return;
         }
         const game = this.gamesManager.getGame(gameId)
         if (game.getStatus() !== GameStatus.STARTED) {
@@ -107,52 +130,49 @@ export default class WebController {
                 game.startGame();
             } else {
                 res.render('play', { gameId: gameId, playerName: req.body.playerName, playersLeft: game.getNumberOfPlayers() - Object.keys(game.playersByName).length });
+                return;
             }
         }
-        console.log(this.playersWaitingToUseCard);
-        console.log(req.body.playerName);
-        let playersWaiting = this.playersWaitingToUseCard.filter(playersAndCard => playersAndCard[2] == req.body.playerName).map(playersAndCard => playersAndCard[0]);
-        // playersWaiting = playersWaiting.concat(this.playersWaitingToUseCard.filter(playersAndCard => playersAndCard[2] == req.body.playerName).map(playersAndCard => playersAndCard[0]));
-        console.log(playersWaiting);
-        res.render('cards', { gameId: gameId, player: game.playersByName[req.body.playerName], playersWaiting: playersWaiting });
+        let playersWaitingWithCards = this.playersWaitingToUseCard.filter(playersAndCard => playersAndCard[2] == req.body.playerName && playersAndCard[5] === undefined ).map(playersAndCard => {return {playerName: playersAndCard[0], cardName: playersAndCard[4]}});
+        res.render('cards', { gameId: gameId, player: game.playersByName[req.body.playerName], playersWaitingWithCards: playersWaitingWithCards });
     }
 
     public async useCard(req: any, res: any) {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
+            return;
         }
         const playerName = req.query.playerName as string;
         if (playerName === undefined) {
             res.send("No player name.");
+            return;
         }
         const cardName = req.query.cardName as string;
         if (cardName === undefined) {
             res.send("No card name.");
+            return;
         }
         const playerTwoName = req.body.playerTwoName as string;
         if (cardName === undefined) {
             res.send("No card name.");
+            return;
         }
         const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCard.find(playersAndCard => {
             return (playersAndCard[0] === playerName && playersAndCard[2] === playerTwoName && playersAndCard[4] === cardName) || (playersAndCard[0] === playerTwoName && playersAndCard[2] === playerName && playersAndCard[4] === cardName);
         });
         if ( playerOneAndTwoWaitingToUseCard === undefined) {
-            this.playersWaitingToUseCard.push([playerName, true, playerTwoName, false, cardName]);
+            this.playersWaitingToUseCard.push([playerName, true, playerTwoName, false, cardName, undefined]);
             res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: cardName});
+            return;
         } else {
             if(playerOneAndTwoWaitingToUseCard[0] === playerName && playerOneAndTwoWaitingToUseCard[3] === false || playerOneAndTwoWaitingToUseCard[2] == playerName && playerOneAndTwoWaitingToUseCard[1] == false) {
                 res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: cardName});
+                return;
             } 
         }
-        const game = this.gamesManager.getGame(gameId)
-        const card = game.playersByName[playerTwoName].availableCards.find(card => card.name === cardName);
-        if (card === undefined) {
-            res.send("No card found.");
-            return;
-        }
-        game.useCard(game.playersByName[playerName], game.playersByName[playerTwoName], card);
-        res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: card.name, resultText: this.output.getOutput() });
+        const result = playerOneAndTwoWaitingToUseCard[5]
+        res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: cardName, resultText: result });
     }
 
 }

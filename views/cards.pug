@@ -15,15 +15,13 @@ block content
             else
                 h1 No cards to play
     br
-    if playersWaiting 
-        each player in playersWaiting 
-            form(class="form-signin" method="POST" action=`/acceptUseCard?gameId=${gameId}&playerName=${player}`)
+    if playersWaitingWithCards 
+        each playerWithCard in playersWaitingWithCards 
+            form(class="form-signin" method="POST" action=`/acceptUseCard?gameId=${gameId}&playerName=${player.name}&cardName=${playerWithCard.cardName}`)
                 div.form-check
-                    input(type="radio" name="playerTwoName" id=`${player}` class="form-check-input" value=`${player}` required)
-                    label( for=`${playere}` class="form-check-label") #{player}
-                        
+                    input(type="hidden" name="playerTwoName" id=`${playerWithCard.playerName}` class="form-check-input" value=`${playerWithCard.playerName}` required)                       
                 - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                button(class=buttonClass type="submit") Acept Use Card 
+                button(class=buttonClass type="submit") Acept Use Card #{playerWithCard.cardName} With #{playerWithCard.playerName}
     br
     form(class="form-signin" method="POST" action=`/play`)
             input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)

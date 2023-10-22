@@ -2,8 +2,13 @@ extends layout
 
 block content 
     p.text-center You are playing game #{gameId} as #{playerName}
-    if result
-        p.text-center #{result}
+    if resultText
+        p.text-center #{resultText}
+        form(class="form-signin" method="POST" action=`/play`)
+            input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)
+            input(type="hidden" name="playerName" id="playerName" class="form-control" value=`${playerName}` required)
+            - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
+            button(class=buttonClass type="submit") Back to Game
     else
         p.text-center Waiting for #{playerTwoName} to accept #{cardName} card...
         form(class="form-signin" method="POST" action=`/useCard?gameId=${gameId}&playerName=${playerName}&cardName=${cardName}`)
