@@ -35,8 +35,14 @@ export class NumOfZerosCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
-        firstNumber = Math.floor(firstNumber/10);
-        secondNumber = Math.floor(secondNumber/10);
-        return Math.round((Math.max(firstNumber, secondNumber) - Math.min(firstNumber, secondNumber)));
+        let numOfZeros = 0;
+        const greaterNumber = Math.max(firstNumber, secondNumber);
+        let smallerNumber = Math.min(firstNumber, secondNumber);
+        for (let number = smallerNumber + 1; number < greaterNumber; number++) {
+            if (number % 10 === 0){
+                numOfZeros++;
+            }
+        }
+        return numOfZeros;
     }
 }
