@@ -35,6 +35,8 @@ export class NumOfZerosCard implements Card {
     constructor() {}
 
     public applyEffect(firstNumber: number, secondNumber: number): number {
-        return Math.round((Math.max(firstNumber, secondNumber) - Math.min(firstNumber + 1, secondNumber + 1))/10);
+        firstNumber = Math.floor(firstNumber/10);
+        secondNumber = Math.floor(secondNumber/10);
+        return Math.round((Math.max(firstNumber, secondNumber) - Math.min(firstNumber, secondNumber)));
     }
 }
