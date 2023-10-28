@@ -7,7 +7,7 @@ export default class WebController {
     private gamesManager: GamesManager;
     private input: ServerInput;
     private output: ServerOutput;
-    private playersWaitingToUseCard: [string, boolean, string, boolean, string, string | undefined][] = [];
+    private playersWaitingToUseCardByGameId: { [gameId: string]: [string, boolean, string, boolean, string, string | undefined][]} = {};
 
     constructor(gamesManager: GamesManager, input: ServerInput, output: ServerOutput) {
         this.input = input;
@@ -47,7 +47,7 @@ export default class WebController {
         this.output.clearOutput();
         game.useCard(player, playerTwo, card);
         const result = this.output.getOutput();
-        const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCard.find(playersAndCard => {
+        const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCardByGameId[gameId].find(playersAndCard => {
             return (playersAndCard[0] === playerName && playersAndCard[2] === playerTwoName && playersAndCard[4] === cardName) || (playersAndCard[0] === playerTwoName && playersAndCard[2] === playerName && playersAndCard[4] === cardName);
         })
         if (playerOneAndTwoWaitingToUseCard === undefined) {
@@ -114,6 +114,7 @@ export default class WebController {
 
     public async startGame(req: any, res: any) {
         const gameId = this.gamesManager.addGame(new SecretNumberGame(this.output, this.input, req.body.playersNumber));
+        this.playersWaitingToUseCardByGameId[gameId] = [];
         this.gamesManager.getGame(gameId).startGame();
         this.gamesManager.getGame(gameId).setPlayer(req.body.playerName);
         res.render('play', { gameId: gameId, playerName: req.body.playerName });
@@ -204,7 +205,7 @@ export default class WebController {
                 return;
             }
         }
-        let playersWaitingWithCards = this.playersWaitingToUseCard.filter(playersAndCard => playersAndCard[2] == req.body.playerName && playersAndCard[5] === undefined ).map(playersAndCard => {return {playerName: playersAndCard[0], cardName: playersAndCard[4]}});
+        let playersWaitingWithCards = this.playersWaitingToUseCardByGameId[gameId].filter(playersAndCard => playersAndCard[2] == req.body.playerName && playersAndCard[5] === undefined ).map(playersAndCard => {return {playerName: playersAndCard[0], cardName: playersAndCard[4]}});
         res.render('cards', { gameId: gameId, player: game.playersByName[req.body.playerName], playersWaitingWithCards: playersWaitingWithCards });
     }
 
@@ -229,11 +230,11 @@ export default class WebController {
             res.send("No card name.");
             return;
         }
-        const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCard.find(playersAndCard => {
+        const playerOneAndTwoWaitingToUseCard = this.playersWaitingToUseCardByGameId[gameId].find(playersAndCard => {
             return (playersAndCard[0] === playerName && playersAndCard[2] === playerTwoName && playersAndCard[4] === cardName) || (playersAndCard[0] === playerTwoName && playersAndCard[2] === playerName && playersAndCard[4] === cardName);
         });
         if ( playerOneAndTwoWaitingToUseCard === undefined) {
-            this.playersWaitingToUseCard.push([playerName, true, playerTwoName, false, cardName, undefined]);
+            this.playersWaitingToUseCardByGameId[gameId].push([playerName, true, playerTwoName, false, cardName, undefined]);
             res.render('useCard', { gameId: gameId, playerName: req.query.playerName, playerTwoName: playerTwoName, cardName: cardName});
             return;
         } else {
