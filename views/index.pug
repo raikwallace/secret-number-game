@@ -3,27 +3,27 @@ extends layout
 block content 
     p.text-center Right now there are #{numOfGames} games open
     div.text-center
-        form(class="form-signin" method="POST" action="/registerPlayer")
+        form(class="form-signin" method="POST" action="/registerPlayer" id="registerPlayerForm")
             - var h1Classes = ['h3', 'mb-3', 'font-weight-normal']
                 h1(class=h1Classes) Please select a game
             //-input gameId
             label( for="gameId" class="sr-only") Game ID
             input(type="number" name="gameId" id="gameId" class="form-control" placeholder="Game ID" required autofocus)
             //-input playerName
-            label( for="playerName" class="sr-only") Player Name
-            input(type="text" name="playerName" id="playerName" class="form-control" placeholder="Player Name" required)
+            label( for="playerNameJoinGame" class="sr-only") Player Name
+            input(type="text" name="playerName" id="playerNameJoinGame" class="form-control" placeholder="Player Name" required)
             //-registerUser button
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button(class=buttonClass type="submit") Join Game
+            button(class=buttonClass type="submit" id="joinGame") Join Game
         br
         p OR 
-        form(class="form-signin" method="POST" action="/startGame")
+        form(class="form-signin" method="POST" action="/startGame" id="startGameForm")
             - var h1Classes = ['h3', 'mb-3', 'font-weight-normal']
                 h1(class=h1Classes) Please insert your name to create a new game
-            label( for="playerName" class="sr-only") Player Name
-            input(type="text" name="playerName" id="playerName" class="form-control" placeholder="Player Name" required)
+            label( for="playerNameStartGame" class="sr-only") Player Name
+            input(type="text" name="playerName" id="playerNameStartGame" class="form-control" placeholder="Player Name" required)
             //-registerUser button
             label( for="playersNumber" class="sr-only") Number of players
             input(type="text" name="playersNumber" id="playersNumber" class="form-control" placeholder="Number of players" required)
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button(class=buttonClass type="submit") Start Game
+            button(class=buttonClass type="submit" id="startGame") Start Game

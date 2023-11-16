@@ -2,9 +2,9 @@
 
 import { Command } from "commander";
 import { SecretNumberGame } from "../services/SecretNumberGame";
-import { DivideCard, MultiplyCard, NumOfZerosCard, SumCard } from "../model/Card";
 import ConsoleOutput from "../infra/console/ConsoleOutput";
 import ConsoleInput from "../infra/console/ConsoleInput";
+
 
 async function start(output: ConsoleOutput, input: ConsoleInput) {
     const program = new Command();
@@ -19,7 +19,7 @@ async function start(output: ConsoleOutput, input: ConsoleInput) {
     const options = program.opts();
     const game = new SecretNumberGame(output, input, options.playersNumber);
 
-    game.registerPlayers(options.playersNumber);
+    await game.registerPlayers(options.playersNumber);
 
     game.startGame();
     let endGame = false;
@@ -44,7 +44,7 @@ async function start(output: ConsoleOutput, input: ConsoleInput) {
         }
         const playerOne = Object.values(game.playersByName)[Number(playerIndexOne)-1];
         const playerTwo = Object.values(game.playersByName)[Number(playerIndexTwo)-1];
-        const commonCardsAvailable = playerOne.availableCards.filter(value => playerTwo.availableCards.includes(value));
+        const commonCardsAvailable = playerOne.availableCards.filter(value => playerTwo.availableCards.find(card => card.constructor.name === value.constructor.name) !== undefined);
         if (commonCardsAvailable.length === 0) {
             output.showMessage("No common cards.");
             continue;
@@ -61,7 +61,7 @@ async function start(output: ConsoleOutput, input: ConsoleInput) {
         game.useCard(playerOne, playerTwo, card);
     }
     for (const player of Object.values(game.playersByName)) {
-        game.setPlayerForecast(player);
+        await game.setPlayerForecast(player);
         console.clear();
     };
     game.showScores();
