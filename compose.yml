@@ -3,6 +3,8 @@ services:
   secret-number-game:
     build: .
     ports:
-      - "3000:80"
+      - "80:3000"
     environment:
     - CODETOREMOVEALLGAMES=1234
+    volumes:
+      - .:/usr/src/app

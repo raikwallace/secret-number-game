@@ -11,7 +11,7 @@ block content
                         label( for=`${card.name}` class="form-check-label") #{card.name}
                         
                 - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                button(class=buttonClass type="submit") Play Card
+                button(class=buttonClass type="submit" id="playCard") Play Card
             else
                 h1 No cards to play
     br
@@ -21,7 +21,7 @@ block content
                 div.form-check
                     input(type="hidden" name="playerTwoName" id=`${playerWithCard.playerName}` class="form-check-input" value=`${playerWithCard.playerName}` required)                       
                 - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                button(class=buttonClass type="submit") Acept Use Card #{playerWithCard.cardName} With #{playerWithCard.playerName}
+                button(class=buttonClass id=`accept${playerWithCard.cardName}Card${playerWithCard.playerName}` type="submit") Acept Use Card #{playerWithCard.cardName} With #{playerWithCard.playerName}
     br
     form(class="form-signin" method="POST" action=`/play`)
             input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)
@@ -30,4 +30,4 @@ block content
             button(class=buttonClass type="submit") Refresh
     br
     - var buttonClass=['btn', 'btn-lg', 'btn-secondary', 'btn-block'];
-    a(class=buttonClass href=`/setPlayerForecast?gameId=${gameId}&playerName=${player.name}`) Set your forecast for the game
+    a(class=buttonClass id='guess' href=`/setPlayersGuess?gameId=${gameId}&playerName=${player.name}`) Set your guess for the game

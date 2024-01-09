@@ -1,7 +1,7 @@
 extends layout 
 
 block content 
-    p.text-center You are playing game #{gameId} as #{playerName}
+    p.text-center#waitingText You are playing game #{gameId} as #{playerName}
     p.text-center Waitings for other players to join, please press Play when ready
     if playersLeft
         p.text-center #{playersLeft} players left to join
@@ -10,4 +10,4 @@ block content
             input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)
             input(type="hidden" name="playerName" id="playerName" class="form-control" value=`${playerName}` required)
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button(class=buttonClass type="submit") Play
+            button(class=buttonClass type="submit" id="play") Play

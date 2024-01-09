@@ -42,18 +42,18 @@ export default class GameController {
         res.send(gameId);
     }
 
-    public async setPlayerForecast(req: any, res: any) {
+    public async setPlayerGuess(req: any, res: any) {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
         }
         const game = this.gamesManager.getGame(gameId)
         const player = game.playersByName[req.body.playerName];
-        const forecast = req.body.forecast;
+        const guess = req.body.guess;
         for (const player of Object.values(game.playersByName)) {
-            this.input.setInput(forecast[player.name]);
+            this.input.setInput(guess[player.name]);
         }
-        game.setPlayerForecast(player);
+        game.setPlayerGuess(player);
     }
 
     public async useCard(req: any, res: any) {

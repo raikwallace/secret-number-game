@@ -72,7 +72,7 @@ export default class WebController {
             return;
         }
         const game = this.gamesManager.getGame(gameId)
-        if(Object.values(game.playersByName).every(player => Object.values(player.forecast).length !== 0)) {
+        if(Object.values(game.playersByName).every(player => Object.values(player.guess).length !== 0)) {
             const scores = game.getScores();
             res.render('endGame', {playerName: playerName, gameId: gameId, scores: scores, players: Object.values(game.playersByName)})
         }
@@ -89,7 +89,7 @@ export default class WebController {
         res.render('index', { numOfGames: this.gamesManager.getGames().length });
     }
 
-    public async getSetPlayerForecastPage(req: any, res: any) {
+    public async getSetPlayersGuessPage(req: any, res: any) {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
@@ -100,7 +100,7 @@ export default class WebController {
             res.send("No player name.");
             return;
         }
-        res.render('setPlayerForecast', { gameId: gameId, playerName: playerName, players: Object.values(this.gamesManager.getGame(gameId).playersByName) });
+        res.render('setPlayersGuess', { gameId: gameId, playerName: playerName, players: Object.values(this.gamesManager.getGame(gameId).playersByName) });
     }
 
     public async removeAllGames(req: any, res: any) {
@@ -120,7 +120,7 @@ export default class WebController {
         res.render('play', { gameId: gameId, playerName: req.body.playerName });
     }
 
-    public async setPlayerForecast(req: any, res: any) {
+    public async setPlayersGuess(req: any, res: any) {
         const gameId = req.query.gameId as number;
         if (gameId === undefined) {
             res.send("No game id.");
@@ -138,8 +138,8 @@ export default class WebController {
             }
             this.input.setInput(req.body[player.name]);
         }
-        game.setPlayerForecast(game.playersByName[playerName]);
-        if(Object.values(game.playersByName).every(player => Object.values(player.forecast).length !== 0)) {
+        game.setPlayerGuess(game.playersByName[playerName]);
+        if(Object.values(game.playersByName).every(player => Object.values(player.guess).length !== 0)) {
             const scores = game.getScores();
             res.render('endGame', {playerName: playerName, gameId: gameId, scores: scores, players: Object.values(game.playersByName)})
         }

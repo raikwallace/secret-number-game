@@ -40,18 +40,18 @@ export class SecretNumberGame {
         for(const player of Object.values(this.playersByName)) {
             let numberOfRightGuesses: number = 0;
             for(const otherPlayer of Object.values(this.playersByName)) {
-                if (player.forecast[otherPlayer.name] === undefined) {
+                if (player.guess[otherPlayer.name] === undefined) {
                     continue;
                 }
                 if (player.name === otherPlayer.name) {
-                    if ( player.forecast[otherPlayer.name] === otherPlayer.number) {
+                    if ( player.guess[otherPlayer.name] === otherPlayer.number) {
                         scores[player.name] += 5;
                         numberOfRightGuesses += 1;
                     } else {
                         scores[player.name] -= 5;
                     }
                 } else {
-                    if (player.forecast[otherPlayer.name] === otherPlayer.number) {
+                    if (player.guess[otherPlayer.name] === otherPlayer.number) {
                         scores[player.name] += 1;
                         scores[otherPlayer.name] -= 1;
                         numberOfRightGuesses += 1;
@@ -93,14 +93,14 @@ export class SecretNumberGame {
         this.usedNumbers.push(number);
     }
 
-    public async setPlayerForecast(player: Player): Promise<void> {
-        this.output.showImportantMessage(`${player.name} your forecast:`);
+    public async setPlayerGuess(player: Player): Promise<void> {
+        this.output.showImportantMessage(`${player.name} your guess:`);
         for (const otherPlayer of Object.values(this.playersByName)) {
-            const forecast = await this.input.getInput(`${otherPlayer.name} forecast: `);
-            if (forecast === "" || Number(forecast) < 1 || Number(forecast) >= 100) {
-                player.forecast[otherPlayer.name] = undefined;
+            const guess = await this.input.getInput(`${otherPlayer.name} guess: `);
+            if (guess === "" || Number(guess) < 1 || Number(guess) >= 100) {
+                player.guess[otherPlayer.name] = undefined;
             } else {
-                player.forecast[otherPlayer.name] = Number(forecast);
+                player.guess[otherPlayer.name] = Number(guess);
             }
         }
     }

@@ -1,12 +1,21 @@
 {
     "compilerOptions": {
-        "rootDir": "src",
+        "rootDirs": [
+            "./src",
+            "./test"
+        ],
         "outDir": "dist",
         "strict": true,
         "target": "es6",
         "module": "commonjs",
         "sourceMap": true,
         "esModuleInterop": true,
-        "moduleResolution": "node"
-    }
+        "moduleResolution": "node",
+    },
+    "include": [
+        "src",
+        "src/**/*.ts",
+        "test",
+        "test/**/*.test.ts"
+    ],
 }
