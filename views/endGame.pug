@@ -7,8 +7,8 @@ block content
             p.text-center #{player.name} has #{scores[player.name]} points and the secret number was #{player.number}
 
         .text-center 
-            a.btn.btn-lg.btn-block.btn-secondary(href=`/?gameId=${gameId}`) Close game and play again
+            a.btn.btn-lg.btn-block.btn-secondary(href=`/?gameId=${gameId}` id="close") Close game and play again
     else 
-        p.text-center Waitings for other players to forecast, please press Refresh when ready...
+        p.text-center Waiting for other players to guess, please press Refresh when ready...
         .text-center 
-            a.btn.btn-lg.btn-block.btn-primary(href=`/endGame?gameId=${gameId}&playerName=${playerName}`) Refresh
+            a.btn.btn-lg.btn-block.btn-primary(href=`/endGame?gameId=${gameId}&playerName=${playerName}` id="refresh") Refresh

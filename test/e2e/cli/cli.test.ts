@@ -86,9 +86,9 @@ describe('CLI', () => {
       expect(output).toContain('Select a player');
       expect(output).toContain('Select another player');
       expect(output).toContain('Select a card');
-      expect(output).toContain('a forecast');
-      expect(output).toContain('b forecast');
-      expect(output).toContain('c forecast');
+      expect(output).toContain('a guess');
+      expect(output).toContain('b guess');
+      expect(output).toContain('c guess');
       done();
     });
 

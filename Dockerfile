@@ -9,4 +9,4 @@ COPY . .
 RUN npm run build
 
 EXPOSE 3000
-CMD ["node", "./dist/entrypoints/server.js"]
+CMD ["node", "./dist/src/entrypoints/server.js"]

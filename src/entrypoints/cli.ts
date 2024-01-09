@@ -61,7 +61,7 @@ async function start(output: ConsoleOutput, input: ConsoleInput) {
         game.useCard(playerOne, playerTwo, card);
     }
     for (const player of Object.values(game.playersByName)) {
-        await game.setPlayerForecast(player);
+        await game.setPlayerGuess(player);
         console.clear();
     };
     game.showScores();

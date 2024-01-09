@@ -8,10 +8,10 @@ block content
             input(type="hidden" name="gameId" id="gameId" class="form-control" value=`${gameId}` required)
             input(type="hidden" name="playerName" id="playerName" class="form-control" value=`${playerName}` required)
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button(class=buttonClass type="submit") Back to Game
+            button(class=buttonClass id="back" type="submit") Back to Game
     else
         p.text-center Waiting for #{playerTwoName} to accept using #{cardName} card...
         form(class="form-signin" method="POST" action=`/useCard?gameId=${gameId}&playerName=${playerName}&cardName=${cardName}`)
             input(type="hidden" name="playerTwoName" id="playerTwoName" class="form-control" value=`${playerTwoName}` required)
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-            button(class=buttonClass type="submit") Refresh
+            button(class=buttonClass id="refresh" type="submit") Refresh

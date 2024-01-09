@@ -12,6 +12,6 @@ block content
                             label( for=`${player.name}` class="form-check-label") #{player.name}
                             
                     - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
-                    button(class=buttonClass type="submit") Select Player
+                    button(class=buttonClass id='selectPlayer' type="submit") Select Player
                 else
                     h1 There are no players with #{cardName} card
