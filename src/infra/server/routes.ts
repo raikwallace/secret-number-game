@@ -4,7 +4,8 @@ import ServerOutput from './ServerOutput';
 import GamesManager from '../../services/GamesManager';
 import WebController from './controllers/WebController';
 
-const express = require('express');
+import express from 'express';
+import HighLowGameController from './controllers/HighLowGameController';
 
 const router = express.Router();
 
@@ -13,26 +14,32 @@ const output = new ServerOutput();
 const gamesManager = new GamesManager();
 const gameController = new GameController(gamesManager, input, output);
 const webController = new WebController(gamesManager, input, output);
+const highLowGameController = new HighLowGameController();
 
-// /api
-router.post('/api/start', gameController.startGame.bind(gameController));
-router.get('/api/end', gameController.endGame.bind(gameController));
-router.get('/api/players', gameController.getPlayers.bind(gameController));
-router.post('/api/guess', gameController.setPlayerGuess.bind(gameController));
-router.post('/api/card', gameController.useCard.bind(gameController));
+// /api/seceret-number-game
+router.post('/api/secret-number-game/start', gameController.startGame.bind(gameController));
+router.get('/api/secret-number-game/end', gameController.endGame.bind(gameController));
+router.get('/api/secret-number-game/players', gameController.getPlayers.bind(gameController));
+router.post('/api/secret-number-game/guess', gameController.setPlayerGuess.bind(gameController));
+router.post('/api/secret-number-game/card', gameController.useCard.bind(gameController));
 
-// webpage
-router.get('/', webController.getPage.bind(webController));
-router.post('/startGame', webController.startGame.bind(webController));
-router.post('/registerPlayer', webController.registerPlayer.bind(webController));
-router.post('/play', webController.play.bind(webController));
-router.post('/selectPlayerTwo', webController.selectPlayerTwo.bind(webController));
-router.post('/useCard', webController.useCard.bind(webController));
-router.post('/acceptUseCard', webController.acceptUseCard.bind(webController));
-router.get('/setPlayersGuess', webController.getSetPlayersGuessPage.bind(webController));
-router.post('/setPlayersGuess', webController.setPlayersGuess.bind(webController));
-router.get('/results', webController.endGame.bind(webController));
-router.get('/endGame', webController.getEndGamePage.bind(webController));
-router.get('/removeAllGames', webController.removeAllGames.bind(webController));
+// webpage/secret-number-game
+router.get('/', (req, res) => res.redirect('/secret-number-game'));
+router.get('/secret-number-game/', webController.getPage.bind(webController));
+router.post('/secret-number-game/startGame', webController.startGame.bind(webController));
+router.post('/secret-number-game/registerPlayer', webController.registerPlayer.bind(webController));
+router.post('/secret-number-game/play', webController.play.bind(webController));
+router.post('/secret-number-game/selectPlayerTwo', webController.selectPlayerTwo.bind(webController));
+router.post('/secret-number-game/useCard', webController.useCard.bind(webController));
+router.post('/secret-number-game/acceptUseCard', webController.acceptUseCard.bind(webController));
+router.get('/secret-number-game/setPlayersGuess', webController.getSetPlayersGuessPage.bind(webController));
+router.post('/secret-number-game/setPlayersGuess', webController.setPlayersGuess.bind(webController));
+router.get('/secret-number-game/results', webController.endGame.bind(webController));
+router.get('/secret-number-game/endGame', webController.getEndGamePage.bind(webController));
+router.get('/secret-number-game/removeAllGames', webController.removeAllGames.bind(webController));
+
+// /api/high-low-game
+router.get('/api/high-low-game/', highLowGameController.getGames.bind(highLowGameController));
+router.post('/api/high-low-game/start', highLowGameController.startGame.bind(highLowGameController));
 
 export default router;
